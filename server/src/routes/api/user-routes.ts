@@ -1,11 +1,11 @@
 import express from 'express';
 const router = express.Router();
 import {
-  createUser,
-  getSingleUser,
-  saveBook,
-  deleteBook,
-  login,
+  createUser, //mutation we create but there's no delete user...definitely no delete user
+  getSingleUser, //query
+  saveBook, //mutation, since Book is a subdocument on user. Adding a book would be to modify User
+  deleteBook, //mutation
+  login, //query
 } from '../../controllers/user-controller.js';
 
 // import middleware
