@@ -21,6 +21,7 @@ interface UserArgs {
 
 interface AddBookArgs {
     userId: string;
+    bookId: string;
     title: string;
     authors: string[];
     description: string;
@@ -40,6 +41,7 @@ const resolvers = {
         user: async (_parent: any, {username}: UserArgs) => {
             return User.findOne({username}).sort({createdAt: -1});
         },
+        // Gets the user's info
         me: async (_parent: any, _args: any, context: any) => {
             if(context.user){
                 return User.findOne({_id: context.user._id});
@@ -72,13 +74,13 @@ const resolvers = {
             const token = signToken(user.username, user.email, user._id);
             return { token, user };
         },
-        addBook: async (_parent: any, {userId, title, authors, description, image, link}: AddBookArgs, context: any) => {
+        addBook: async (_parent: any, {userId, bookId, title, authors, description, image, link}: AddBookArgs, context: any) => {
             if(context.user) {
                 return User.findOneAndUpdate(
                     {_id: userId},
                     {
                         $addToSet: {
-                            books: {title, authors, description, image, link},
+                            savedBooks: {bookId, title, authors, description, image, link},
                         },
                     },
                     {
@@ -95,8 +97,8 @@ const resolvers = {
                     {_id: userId},
                     {
                         $pull: {
-                            books: {
-                                _id: bookId,
+                            savedBooks: {
+                                _id: bookId
                             },
                         },
                     },
