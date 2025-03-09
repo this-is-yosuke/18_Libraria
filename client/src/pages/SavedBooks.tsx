@@ -7,7 +7,8 @@ import { removeBookId } from '../utils/localStorage';
 import type { User } from '../models/User';
 import { Navigate, useParams } from 'react-router-dom';
 import { QUERY_ME } from '../utils/queries';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
+import { REMOVE_BOOK } from '../utils/mutations';
 
 const SavedBooks = () => {
   // const [userData, setUserData] = useState<User>({
@@ -45,36 +46,47 @@ const SavedBooks = () => {
   //   getUserData();
   // }, [userDataLength]);
 
-  // // create function that accepts the book's mongo _id value as param and deletes the book from the database
-  // const handleDeleteBook = async (bookId: string) => {
-  //   const token = Auth.loggedIn() ? Auth.getToken() : null;
+  // GraphQL for REMOVE_BOOK
+  const [removeBook] = useMutation(REMOVE_BOOK);
 
-  //   if (!token) {
-  //     return false;
-  //   }
+  // create function that accepts the book's mongo _id value as param and deletes the book from the database
+  const handleDeleteBook = async (bookId: string) => {
+    // const bookToRemove = savedBooks.find((book) => book.bookId === bookId)
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-  //   try {
-  //     const response = await deleteBook(bookId, token);
+    if (!token) {
+      return false;
+    }
 
-  //     if (!response.ok) {
-  //       throw new Error('something went wrong!');
-  //     }
+    try {
+    //   const response = await deleteBook(bookId, token);
 
-  //     const updatedUser = await response.json();
-  //     setUserData(updatedUser);
-  //     // upon success, remove book's id from localStorage
-  //     removeBookId(bookId);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+    //   if (!response.ok) {
+    //     throw new Error('something went wrong!');
+    //   }
+
+    // GraphQL mutation
+      await removeBook({
+        variables: {
+          bookId: bookId
+        },
+      })
+
+      // const updatedUser = await response.json();
+      // setUserData(updatedUser);
+      // upon success, remove book's id from localStorage
+      removeBookId(bookId);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // // if data isn't here yet, say so
   // if (!userDataLength) {
   //   return <h2>LOADING...</h2>;
   // }
 
-  // GraphQl
+  // GraphQl for QUERY_BOOK
   const { username: userParam } = useParams();
   const { loading, data } = useQuery(QUERY_ME, {
     variables: {username: userParam },
