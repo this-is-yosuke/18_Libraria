@@ -71,8 +71,6 @@ const SearchBooks = () => {
   // create function to handle saving a book to our database
   const handleSaveBook = async (bookId: string) => {
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId)
-    console.log("Sending book data:", bookId); 
-    console.log(`Title: ${bookToSave?.title}, Author: ${bookToSave?.authors}, Description: ${bookToSave?.description}, Image: ${bookToSave?.image}, Link: ${bookToSave?.link || "Sorry nothing"}`);
     
     // Ensure the book is found
     if (!bookToSave) return;

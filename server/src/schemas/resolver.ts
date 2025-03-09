@@ -75,10 +75,6 @@ const resolvers = {
             return { token, user };
         },
         addBook: async (_parent: any, {bookId, title, authors, description, image, link}: AddBookArgs, context: any) => {
-            console.log(`The current user: ${context.user.username}, ${context.user.userId}`);
-            console.log(`The current user: ${context.user.username}, ${context.user.id}`);
-            console.log(`The current user: ${context.user.username}, ${context.user._id}`);
-            console.log(`The current book: ${bookId}, ${title}`);
             if(context.user) {
                 return User.findOneAndUpdate(
                     {_id: context.user._id},
