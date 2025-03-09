@@ -18,7 +18,7 @@ export const QUERY_USER = gql`
         }
     }`;
 
-    export const QUEY_ME = gql`
+    export const QUERY_ME = gql`
         query me {
             me {
                 _id
@@ -26,12 +26,11 @@ export const QUERY_USER = gql`
                 email
                 bookCount
                 savedBooks {
-                    _id
+                    bookId
                     title
                     authors
                     description
                     image
-                    link
                 }
             }
         }

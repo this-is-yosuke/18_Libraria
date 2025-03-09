@@ -1,5 +1,16 @@
 // use this to decode a token and get the user's information out of it
-import { jwtDecode } from 'jwt-decode';
+import { type JwtPayload, jwtDecode } from 'jwt-decode';
+import { Book } from '../models/Book.js';
+
+// Extending the JwtPayload interface to include additional data fields specific to the application.
+interface ExtendedJwt extends JwtPayload {
+  data:{
+    username:string,
+    email:string,
+    id:string,
+    savedBooks: Book[]
+  }
+};
 
 interface UserToken {
   name: string;
@@ -10,7 +21,7 @@ interface UserToken {
 class AuthService {
   // get user data
   getProfile() {
-    return jwtDecode(this.getToken() || '');
+    return jwtDecode<ExtendedJwt>(this.getToken() || '');
   }
 
   // check if user's logged in
